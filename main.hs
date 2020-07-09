@@ -1,24 +1,22 @@
 import Debug.Trace
 import Data.Ratio
+import Data.NumberLength
 
-rootSin :: Rational -> Rational -> Rational -> Rational
-rootSin val cur factor =
-  if (cur*cur == val) then
+rootSin :: Rational -> Integer -> Rational -> Rational -> Rational
+rootSin val pot cur factor =
+  if (cur^pot == val) then
       cur
     else
-      if (cur*cur < val) then
-      rootSin val (cur+(1/factor)) factor
+      if (cur^pot < val) then
+      rootSin val pot (cur+(1/factor)) factor
     else
       cur-1/factor
 
-rootMult:: Rational -> Integer -> Integer -> Rational -> Double
-rootMult n it maxIt akku = if (it==maxIt+1) then
-   fromRational(akku)
+rootMult:: Rational -> Integer -> Integer  -> Integer -> Rational -> Rational
+rootMult n pot it maxIt akku = if (it==maxIt+1) then
+    trace("Länge: " ++ lengthInteger(akku))
+    akku
    else
-     rootMult n (it+1) maxIt (rootSin n akku (10^it))
+     rootMult n pot (it+1) maxIt (rootSin n pot akku (10^it))
 
-root n m = rootMult n 1 m 0
-
-fac n = if n == 0 then 1 else n * fac (n - 1)
-
-potenzen = [2^n | n<-[1..100]]
+root n pot m = rootMult n pot 1 m 0
